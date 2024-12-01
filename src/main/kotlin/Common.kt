@@ -1,5 +1,3 @@
-package org.example
-
 class InputData {
     companion object {
         fun readLines(filename: String): List<String> {

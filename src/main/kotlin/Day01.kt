@@ -1,10 +1,7 @@
-package org.example
-
 import kotlin.math.absoluteValue
 
-
 fun main() {
-    val lines = InputData.readLines("day1.txt")
+    val lines = InputData.readLines("day01.txt")
     val pairs = lines.map { line ->
         line.split("   ").map { it.toInt() }
     }
