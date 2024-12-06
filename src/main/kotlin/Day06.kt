@@ -13,20 +13,21 @@ fun main() {
             }
         }
         .toMap()
+    val startingPosition = grid.entries.find { it.value == '^' }!!.key
 
     solve("Part 1", 4515) {
-        calculatePath(grid).distinct().size
+        calculatePath(grid, startingPosition).distinct().size
     }
     solve("Part 2", 1309) {
-        val obstacleCandidates = grid.filter { it.value == '.' }
+        val obstacleCandidates = calculatePath(grid, startingPosition).filter { it != startingPosition }.distinct()
         coroutineScope {
-            obstacleCandidates.entries
-                .map { (coordinates, _) ->
+            obstacleCandidates
+                .map { coordinates ->
                     async(Dispatchers.Default) {
                         val modifiedGrid = HashMap(grid)
                         modifiedGrid[coordinates] = '#'
                         try {
-                            calculatePath(modifiedGrid)
+                            calculatePath(modifiedGrid, startingPosition)
                             // println("Drop $coordinates")
                             false
                         } catch (e: LoopException) {
@@ -41,8 +42,8 @@ fun main() {
     }
 }
 
-private fun calculatePath(grid: Map<Coordinates, Char>): List<Coordinates> {
-    var position: Coordinates = grid.entries.find { it.value == '^' }!!.key
+private fun calculatePath(grid: Map<Coordinates, Char>, startingPosition: Coordinates): List<Coordinates> {
+    var position = startingPosition
     var direction = Direction.UP
     val path = mutableSetOf<Pair<Coordinates, Direction>>()
     while (grid.containsKey(position)) {
