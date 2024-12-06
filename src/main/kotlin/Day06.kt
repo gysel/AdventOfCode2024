@@ -24,8 +24,11 @@ fun main() {
             obstacleCandidates
                 .map { coordinates ->
                     async(Dispatchers.Default) {
-                        val modifiedGrid = HashMap(grid)
-                        modifiedGrid[coordinates] = '#'
+                        val modifiedGrid = object : Map<Coordinates, Char> by grid {
+                            override fun get(key: Coordinates): Char? {
+                                return if (key == coordinates) '#' else grid[key]
+                            }
+                        }
                         try {
                             calculatePath(modifiedGrid, startingPosition)
                             // println("Drop $coordinates")

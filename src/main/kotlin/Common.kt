@@ -28,6 +28,6 @@ fun <T> solve(part: String, correctSolution: T?, function: suspend () -> T) {
     }
     val millis = System.currentTimeMillis() - start
     val seconds = millis / 1000
-    val duration = "${seconds}s ${millis % 1000}ms"
+    val duration = if (seconds > 0) "${seconds}s ${millis % 1000}ms" else "${millis}ms"
     println("Solution of $part is '$solution', calculation took $duration")
 }
