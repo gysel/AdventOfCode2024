@@ -1,3 +1,7 @@
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+
 fun main() {
     val lines = InputData.readLines("day06.txt")
     // 0,0 is the bottom left
@@ -15,27 +19,32 @@ fun main() {
     }
     solve("Part 2", 1309) {
         val obstacleCandidates = grid.filter { it.value == '.' }
-        obstacleCandidates.entries
-            .parallelStream()
-            .filter { (coordinates, _) ->
-                val modifiedGrid = HashMap(grid)
-                modifiedGrid[coordinates] = '#'
-                try {
-                    calculatePath(modifiedGrid)
-                    // println("Drop $coordinates")
-                    false
-                } catch (e: LoopException) {
-                    // println("Found loop with $coordinates")
-                    true
+        coroutineScope {
+            obstacleCandidates.entries
+                .map { (coordinates, _) ->
+                    async(Dispatchers.Default) {
+                        val modifiedGrid = HashMap(grid)
+                        modifiedGrid[coordinates] = '#'
+                        try {
+                            calculatePath(modifiedGrid)
+                            // println("Drop $coordinates")
+                            false
+                        } catch (e: LoopException) {
+                            // println("Found loop with $coordinates | ${Thread.currentThread().name}")
+                            true
+                        }
+                    }
                 }
-            }.toList().size
+                .filter { it.await() }
+                .size
+        }
     }
 }
 
 private fun calculatePath(grid: Map<Coordinates, Char>): List<Coordinates> {
     var position: Coordinates = grid.entries.find { it.value == '^' }!!.key
     var direction = Direction.UP
-    val path = mutableListOf<Pair<Coordinates, Direction>>()
+    val path = mutableSetOf<Pair<Coordinates, Direction>>()
     while (grid.containsKey(position)) {
         val nextPosition = position.moveTo(direction)
         when (grid[nextPosition]) {
@@ -61,9 +70,7 @@ private fun calculatePath(grid: Map<Coordinates, Char>): List<Coordinates> {
     return path.map { it.first }
 }
 
-class LoopException : Exception() {
-
-}
+class LoopException : Exception()
 
 data class Coordinates(val x: Int, val y: Int) {
     fun moveTo(direction: Direction) = this.copy(x = x + direction.x, y = y + direction.y)

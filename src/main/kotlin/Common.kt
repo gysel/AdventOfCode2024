@@ -1,3 +1,5 @@
+import kotlinx.coroutines.runBlocking
+
 class InputData {
     companion object {
         fun readLines(filename: String): List<String> {
@@ -16,9 +18,11 @@ class InputData {
     }
 }
 
-fun <T> solve(part: String, correctSolution: T?, function: () -> T) {
+fun <T> solve(part: String, correctSolution: T?, function: suspend () -> T) {
     val start = System.currentTimeMillis()
-    val solution = function()
+    val solution = runBlocking {
+        function()
+    }
     if (correctSolution != null && solution != correctSolution) {
         throw IllegalStateException("Wrong solution! Expected is $correctSolution, but result was $solution.")
     }
