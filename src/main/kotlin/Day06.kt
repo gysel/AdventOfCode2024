@@ -15,18 +15,20 @@ fun main() {
     }
     solve("Part 2", 1309) {
         val obstacleCandidates = grid.filter { it.value == '.' }
-        obstacleCandidates.entries.filter { (coordinates, _) ->
-            val modifiedGrid = HashMap(grid)
-            modifiedGrid[coordinates] = '#'
-            try {
-                calculatePath(modifiedGrid)
-                // println("  Drop $coordinates")
-                false
-            } catch (e: LoopException) {
-                println("Found loop with $coordinates")
-                true
-            }
-        }.size
+        obstacleCandidates.entries
+            .parallelStream()
+            .filter { (coordinates, _) ->
+                val modifiedGrid = HashMap(grid)
+                modifiedGrid[coordinates] = '#'
+                try {
+                    calculatePath(modifiedGrid)
+                    // println("Drop $coordinates")
+                    false
+                } catch (e: LoopException) {
+                    // println("Found loop with $coordinates")
+                    true
+                }
+            }.toList().size
     }
 }
 

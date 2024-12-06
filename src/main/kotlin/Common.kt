@@ -22,5 +22,8 @@ fun <T> solve(part: String, correctSolution: T?, function: () -> T) {
     if (correctSolution != null && solution != correctSolution) {
         throw IllegalStateException("Wrong solution! Expected is $correctSolution, but result was $solution.")
     }
-    println("Solution of $part is '$solution', calculation took ${System.currentTimeMillis() - start}ms")
+    val millis = System.currentTimeMillis() - start
+    val seconds = millis / 1000
+    val duration = "${seconds}s ${millis % 1000}ms"
+    println("Solution of $part is '$solution', calculation took $duration")
 }
