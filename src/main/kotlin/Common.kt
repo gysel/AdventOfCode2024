@@ -24,7 +24,7 @@ fun <T> solve(part: String, correctSolution: T?, function: suspend () -> T) {
         function()
     }
     if (correctSolution != null && solution != correctSolution) {
-        throw IllegalStateException("Wrong solution! Expected is $correctSolution, but result was $solution.")
+        throw IllegalStateException("Wrong solution for $part! Expected is $correctSolution, but result was $solution.")
     }
     val millis = System.currentTimeMillis() - start
     val seconds = millis / 1000
