@@ -16,26 +16,23 @@ fun main() {
         """.trimIndent().lines()
         .let(::parseCharacterGrid)
 
+    val grid = InputData.readLines("day08.txt")
+        .let(::parseCharacterGrid)
+
+    // Part 1
     solve("Example part 1", 14) {
         countAntinodes(sampleGrid)
     }
-
-    val grid: Map<Coordinates, Char> = InputData.readLines("day08.txt")
-        .let(::parseCharacterGrid)
-
     solve("Part 1", 344) {
         countAntinodes(grid)
     }
-
-
+    // Part 2
     solve("Example part 2", 34) {
         countAntinodes(sampleGrid, true)
     }
-
-    solve("Part 2", null) {
+    solve("Part 2", 1182) {
         countAntinodes(grid, true)
     }
-
 }
 
 private fun countAntinodes(grid: Map<Coordinates, Char>, repeatAntinodes: Boolean = false): Int {
@@ -48,20 +45,19 @@ private fun countAntinodes(grid: Map<Coordinates, Char>, repeatAntinodes: Boolea
             .flatMap { (left, right) ->
                 val distance = left - right
                 if (repeatAntinodes) {
-                    val leftAntinodes = mutableListOf(left)
-                    var leftAntinode = left + distance
-                    while (leftAntinode in gridCoordinates) {
-                        leftAntinodes.add(leftAntinode)
-                        leftAntinode += distance
-                    }
-                    val rightAntinodes = mutableListOf(right)
-                    var rightAntinode = right - distance
-                    while (rightAntinode in gridCoordinates) {
-                        rightAntinodes.add(rightAntinode)
-                        rightAntinode -= distance
-                    }
-                    leftAntinodes + rightAntinodes
+                    listOf(
+                        left to Coordinates::plus,
+                        right to Coordinates::minus
+                    ).flatMap { (start, operation) ->
+                        val antinodes = mutableListOf<Coordinates>()
+                        var position = start
+                        while (position in gridCoordinates) {
+                            antinodes.add(position)
+                            position = operation(position, distance)
+                        }
+                        antinodes
+                    }.distinct()
                 } else listOf(left + distance, right - distance)
             }.distinct()
-    }.distinct().filter { it in gridCoordinates }.size
+    }.distinct().count { it in gridCoordinates }
 }
