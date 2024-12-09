@@ -66,11 +66,12 @@ private fun List<DiskMapEntry>.compactFiles(): List<DiskMapEntry> {
         val currentIndex = compacted.asSequence()
             .mapIndexed { index, diskMapEntry -> index to diskMapEntry }
             .first { it.second == fileToMove }.first
+        // TODO improve the calculation of freeSlotStartIndex
         val freeSlotStartIndex: Int? =
             compacted.zip(0..<compacted.size).asSequence().windowed(fileToMove.fileSize) { window ->
                 val isMoveLeft = window.first().second < currentIndex
-                val fits = window.all { it.first.isEmpty }
-                (isMoveLeft && fits) to window.first().second
+                val fits = lazy { window.all { it.first.isEmpty } }
+                (isMoveLeft && fits.value) to window.first().second
             }.firstOrNull { it.first }?.second
         if (freeSlotStartIndex != null) {
             compacted.replaceAll { if (it.id == fileToMove.id) DiskMapEntry.EMPTY else it }
