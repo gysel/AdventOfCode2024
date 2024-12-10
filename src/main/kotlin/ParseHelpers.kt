@@ -11,3 +11,16 @@ fun parseCharacterGrid(lines: List<String>): Map<Coordinates, Char> {
         }
         .toMap()
 }
+/**
+ * 0,0 is bottom left
+ */
+fun parseNumberGrid(lines: List<String>): Map<Coordinates, Int> {
+    return lines
+        .reversed()
+        .flatMapIndexed { y: Int, line: String ->
+            line.mapIndexed { x, c ->
+                Coordinates(x, y) to c.digitToInt()
+            }
+        }
+        .toMap()
+}
