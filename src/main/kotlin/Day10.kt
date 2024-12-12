@@ -28,7 +28,7 @@ fun main() {
 private fun findTrailheadCandidates(firstSampleInput: Map<Coordinates, Int>) =
     firstSampleInput.entries.filter { (_, v) -> v == 0 }.map { it.key }
 
-fun calculateTrailheadPaths(position: Coordinates, grid: Map<Coordinates, Int>): List<List<Coordinates>> {
+private fun calculateTrailheadPaths(position: Coordinates, grid: Map<Coordinates, Int>): List<List<Coordinates>> {
     val queue = LinkedList<List<Coordinates>>()
     queue.add(listOf(position))
     val pathsToPeaks = mutableListOf<List<Coordinates>>()
@@ -36,8 +36,7 @@ fun calculateTrailheadPaths(position: Coordinates, grid: Map<Coordinates, Int>):
         val currentPath = queue.removeFirst()
         val currentPosition = currentPath.last()
         val nextHeight = grid[currentPosition]!! + 1
-        val neighbours = Direction.entries.map(currentPosition::moveTo)
-        val pathContinuations = neighbours
+        val pathContinuations = currentPosition.neighbours()
             .filter { grid[it] == nextHeight }
             .map { currentPath + listOf(it) }
         if (nextHeight == 9) {

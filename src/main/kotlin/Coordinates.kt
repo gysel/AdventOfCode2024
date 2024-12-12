@@ -3,6 +3,8 @@ data class Coordinates(val x: Int, val y: Int) {
 
     operator fun plus(other: Coordinates) = Coordinates(x + other.x, y + other.y)
     operator fun minus(other: Coordinates) = Coordinates(x - other.x, y - other.y)
+
+    fun neighbours() = Direction.entries.map(this::moveTo)
 }
 
 enum class Direction(val x: Int, val y: Int) {
