@@ -6,7 +6,7 @@ fun parseCharacterGrid(lines: List<String>): Map<Coordinates, Char> {
         .reversed()
         .flatMapIndexed { y: Int, line: String ->
             line.mapIndexed { x, c ->
-                Coordinates(x, y) to c
+                Coordinates(x.toLong(), y.toLong()) to c
             }
         }
         .toMap()
@@ -19,7 +19,7 @@ fun parseNumberGrid(lines: List<String>): Map<Coordinates, Int> {
         .reversed()
         .flatMapIndexed { y: Int, line: String ->
             line.mapIndexed { x, c ->
-                Coordinates(x, y) to c.digitToInt()
+                Coordinates(x.toLong(), y.toLong()) to c.digitToInt()
             }
         }
         .toMap()

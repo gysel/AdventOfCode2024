@@ -9,7 +9,7 @@ fun main() {
         .reversed()
         .flatMapIndexed { y: Int, line: String ->
             line.mapIndexed { x, c ->
-                Coordinates(x, y) to c
+                Coordinates(x.toLong(), y.toLong()) to c
             }
         }
         .toMap()

@@ -101,5 +101,5 @@ fun countGaps(numbers: List<Int>): Int {
 }
 
 private fun Coordinates.getRelevantDimension(direction: Direction): Int {
-    return if (direction == LEFT || direction == Direction.RIGHT) this.x else this.y
+    return if (direction == LEFT || direction == Direction.RIGHT) this.x.toInt() else this.y.toInt()
 }
