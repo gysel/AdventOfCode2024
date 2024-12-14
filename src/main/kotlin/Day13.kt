@@ -46,8 +46,7 @@ fun parsePuzzle(text: String): Puzzle {
     val regex = Regex(".*: .[+=](\\d+), .[+=](\\d+)")
     val (a, b, p) = text.lines().map {
         val match = regex.matchEntire(it) ?: error("Invalid format")
-        val x = match.groups[1]!!.value.toLong()
-        val y = match.groups[2]!!.value.toLong()
+        val (x, y) = match.destructured
         Coordinates(x, y)
     }
     return Puzzle(a, b, p)
