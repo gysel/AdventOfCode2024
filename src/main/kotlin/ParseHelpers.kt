@@ -1,9 +1,10 @@
 /**
- * 0,0 is bottom left
+ * zeroIsTop == false -> 0,0 is bottom left
+ * zeroIsTop == true -> 0,0 is top left
  */
-fun parseCharacterGrid(lines: List<String>): Map<Coordinates, Char> {
+fun parseCharacterGrid(lines: List<String>, zeroIsTop: Boolean = false): Map<Coordinates, Char> {
     return lines
-        .reversed()
+        .let { if (zeroIsTop) it else it.reversed() }
         .flatMapIndexed { y: Int, line: String ->
             line.mapIndexed { x, c ->
                 Coordinates(x.toLong(), y.toLong()) to c

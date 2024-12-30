@@ -19,3 +19,21 @@ enum class Direction(val x: Int, val y: Int) {
         LEFT -> UP
     }
 }
+
+fun printMap(grid: List<Coordinates>, dimensions: Pair<Int, Int>) {
+    val (maxX, maxY) = dimensions
+    (0..<maxY).forEach { y ->
+        (0..<maxX).map { x ->
+            grid.count { it.x.toInt() == x && it.y.toInt() == y }
+        }.map { if (it == 0) '.' else it.digitToChar() }.joinToString("").let(::println)
+    }
+}
+
+fun printMap(grid: Map<Coordinates, Char>, dimensions: Pair<Int, Int>) {
+    val (maxX, maxY) = dimensions
+    (0..<maxY).forEach { y ->
+        (0..<maxX).map { x ->
+            grid[Coordinates(x, y)] ?: ' '
+        }.joinToString("").let(::println)
+    }
+}

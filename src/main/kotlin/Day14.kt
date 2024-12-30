@@ -24,7 +24,7 @@ fun main() {
         val sampleDimensions = 11 to 7
         val smallSample = listOf("p=2,4 v=2,-3").map(::parse)
         val state = move(smallSample, 5, sampleDimensions)
-        printMap(state, sampleDimensions)
+        printMap(state.map { it.first }, sampleDimensions)
         state.first().first
     }
 
@@ -32,7 +32,7 @@ fun main() {
 
         val sampleDimensions = 11 to 7
         val state = move(sampleInput, 100, sampleDimensions)
-        printMap(state, sampleDimensions)
+        printMap(state.map { it.first }, sampleDimensions)
         // TODO use cartesian product?
         val quadrants = listOf(
             // x to y
@@ -114,16 +114,7 @@ private fun teleport(coordinates: Coordinates, dimensions: Pair<Int, Int>): Coor
     } else coordinates
 }
 
-private fun printMap(state: List<Pair<Coordinates, Coordinates>>, dimensions: Pair<Int, Int>) {
-    val (maxX, maxY) = dimensions
-    (0..<maxY).forEach { y ->
-        (0..<maxX).map { x ->
-            state.count { it.first.x.toInt() == x && it.first.y.toInt() == y }
-        }.map { if (it == 0) '.' else it.digitToChar() }.joinToString("").let(::println)
-    }
-}
-
-fun createImage(state: List<Pair<Coordinates, Coordinates>>, elapsedSeconds: Int, dimensions: Pair<Int, Int>) {
+private fun createImage(state: List<Pair<Coordinates, Coordinates>>, elapsedSeconds: Int, dimensions: Pair<Int, Int>) {
 
     val (width, height) = dimensions
     // Create a new BufferedImage with RGB color model
