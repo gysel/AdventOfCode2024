@@ -55,7 +55,7 @@ fun main() {
 
 }
 
-private fun Map<Coordinates, Char>.findShortestPath(): List<Coordinates> {
+private fun Map<Coordinates, Char>.findShortestPath(): Map<Coordinates, Int> {
     val from = findStart()
     val to = findEnd()
     val queue: LinkedList<List<Coordinates>> = LinkedList()
@@ -71,7 +71,7 @@ private fun Map<Coordinates, Char>.findShortestPath(): List<Coordinates> {
             }
         }
     }
-    return paths.minBy { it.size }
+    return paths.minBy { it.size }.withIndex().associate { (i, c) -> c to i }
 }
 
 private fun Map<Coordinates, Char>.findCheats(cheatLength: Int = 2): List<Pair<Coordinates, Coordinates>> {
@@ -99,9 +99,9 @@ private fun Map<Coordinates, Char>.findCheats(cheatLength: Int = 2): List<Pair<C
     }
 }
 
-fun calculateSavings(pathWithoutCheats: List<Coordinates>, cheat: Pair<Coordinates, Coordinates>): Int {
+fun calculateSavings(pathWithoutCheats: Map<Coordinates, Int>, cheat: Pair<Coordinates, Coordinates>): Int {
     val (from, to) = cheat
-    return pathWithoutCheats.indexOf(to) - pathWithoutCheats.indexOf(from) - cheat.first.distanceTo(cheat.second)
+    return pathWithoutCheats[to]!! - pathWithoutCheats[from]!! - cheat.first.distanceTo(cheat.second)
         .toInt()
 }
 
