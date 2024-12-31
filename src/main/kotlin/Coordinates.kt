@@ -1,3 +1,5 @@
+import kotlin.math.absoluteValue
+
 data class Coordinates(val x: Long, val y: Long) {
     constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
     constructor(x: String, y: String) : this(x.toLong(), y.toLong())
@@ -7,6 +9,13 @@ data class Coordinates(val x: Long, val y: Long) {
 
     operator fun plus(other: Coordinates) = Coordinates(x + other.x, y + other.y)
     operator fun minus(other: Coordinates) = Coordinates(x - other.x, y - other.y)
+
+    /**
+     * Calculates the [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) to another point.
+     */
+    fun distanceTo(other: Coordinates): Long {
+        return (x - other.x).absoluteValue + (y - other.y).absoluteValue
+    }
 }
 
 enum class Direction(val x: Int, val y: Int) {
